@@ -9,41 +9,40 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    @if (! $heeftAllergenen)
-                        {{-- Scenario 2: geen allergenen -> exacte melding + redirect na 4 seconden --}}
-                        <div class="rounded-lg border border-green-300 bg-green-50 p-6">
-                            <p class="text-base text-gray-900">{{ $geenAllergenenMelding }}</p>
+                    {{-- Boven de tabel: productgegevens --}}
+                    <dl class="mb-6 space-y-1.5 text-base">
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Naam Product') }}:</dt>
+                            <dd class="text-gray-700">{{ $product->Naam }}</dd>
                         </div>
-                    @else
-                        {{-- Scenario 1: alle allergenen van het product --}}
-                        <dl class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Naam Product') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">{{ $product->Naam }}</dd>
-                            </div>
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Barcode') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">{{ $product->Barcode }}</dd>
-                            </div>
-                        </dl>
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Barcode') }}:</dt>
+                            <dd class="text-gray-700">{{ $product->Barcode }}</dd>
+                        </div>
+                    </dl>
 
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                                <thead class="bg-gray-50">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Naam') }}
+                                    </th>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Omschrijving') }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @if (! $heeftAllergenen)
+                                    {{-- Scenario 2: exacte melding staat in de tabel --}}
                                     <tr>
-                                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
-                                            {{ __('Naam') }}
-                                        </th>
-                                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
-                                            {{ __('Omschrijving') }}
-                                        </th>
+                                        <td colspan="2" class="px-4 py-6 text-center text-gray-900">
+                                            {{ $geenAllergenenMelding }}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200 bg-white">
+                                @else
+                                    {{-- Scenario 1: allergenen, gesorteerd op naam oplopend --}}
                                     @foreach ($allergenen as $allergeen)
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
@@ -54,10 +53,10 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="mt-6">
                         <a href="{{ route('magazijn.index') }}"

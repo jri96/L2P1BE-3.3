@@ -35,6 +35,8 @@ class AllergenenInformatieTest extends TestCase
         $response->assertSee('8719587323256');
 
         // Tabel met alle allergenen, gesorteerd op naam oplopend.
+        $response->assertSee('Naam');
+        $response->assertSee('Omschrijving');
         $response->assertSee('Gluten');
         $response->assertSee('Lactose');
         $response->assertSee('Soja');
@@ -61,6 +63,11 @@ class AllergenenInformatieTest extends TestCase
         );
 
         $inhoud = $response->getContent();
+        $this->assertMatchesRegularExpression(
+            '/<td[^>]*>\s*In dit product zitten geen stoffen/',
+            $inhoud,
+            'De melding staat niet in de tabel.'
+        );
         $this->assertStringContainsString('}, 4000);', $inhoud, 'De redirect na 4 seconden ontbreekt.');
         $this->assertStringContainsString(route('magazijn.index'), $inhoud, 'De redirect verwijst niet naar het magazijnoverzicht.');
     }

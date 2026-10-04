@@ -9,75 +9,69 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    @if (! $heeftVoorraad)
-                        {{-- Scenario 2: geen voorraad aanwezig -> exacte melding + redirect na 4 seconden --}}
-                        <div class="rounded-lg border border-amber-300 bg-amber-50 p-6">
-                            <p class="text-base text-gray-900">{{ $geenVoorraadMelding }}</p>
-                        </div>
-                    @else
-                        {{-- Scenario 1: leveringsinformatie van het product --}}
-                        <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">{{ $product->Naam }}</h3>
-                            <p class="text-sm text-gray-600">
-                                {{ __('Barcode') }}: {{ $product->Barcode }}
-                                &middot; {{ __('Verwachte eerstvolgende levering') }}:
-                                {{ $verwachteEerstvolgendeLevering?->format('d-m-Y') ?? __('niet ingepland') }}
-                            </p>
-                        </div>
+                    <p class="mb-4 text-sm text-gray-600">
+                        {{ $product->Naam }} &middot; {{ __('Barcode') }}: {{ $product->Barcode }}
+                    </p>
 
-                        <dl class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Naam leverancier') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">
-                                    {{ $leverancier?->Naam ?? __('Onbekend') }}
-                                </dd>
-                            </div>
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Contactpersoon leverancier') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">
-                                    {{ $leverancier?->ContactPersoon ?? __('Onbekend') }}
-                                </dd>
-                            </div>
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Leveranciernummer') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">
-                                    {{ $leverancier?->LeverancierNummer ?? __('Onbekend') }}
-                                </dd>
-                            </div>
-                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                    {{ __('Mobiel') }}
-                                </dt>
-                                <dd class="mt-1 text-base text-gray-900">
-                                    {{ $leverancier?->Mobiel ?? __('Onbekend') }}
-                                </dd>
-                            </div>
-                        </dl>
+                    {{-- Boven de tabel: leveranciersgegevens --}}
+                    <dl class="mb-6 space-y-1.5 text-base">
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Naam leverancier') }}:</dt>
+                            <dd class="text-gray-700">{{ $leverancier?->Naam ?? __('Onbekend') }}</dd>
+                        </div>
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Contactpersoon leverancier') }}:</dt>
+                            <dd class="text-gray-700">{{ $leverancier?->ContactPersoon ?? __('Onbekend') }}</dd>
+                        </div>
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Leveranciernummer') }}:</dt>
+                            <dd class="text-gray-700">{{ $leverancier?->LeverancierNummer ?? __('Onbekend') }}</dd>
+                        </div>
+                        <div class="flex flex-wrap gap-x-2">
+                            <dt class="font-semibold text-gray-900">{{ __('Mobiel') }}:</dt>
+                            <dd class="text-gray-700">{{ $leverancier?->Mobiel ?? __('Onbekend') }}</dd>
+                        </div>
+                    </dl>
 
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                                <thead class="bg-gray-50">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Naam Product') }}
+                                    </th>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Datum laatste levering') }}
+                                    </th>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Aantal') }}
+                                    </th>
+                                    <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
+                                        {{ __('Eerstvolgende levering') }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @if (! $heeftVoorraad)
+                                    {{-- Scenario 2: exacte melding staat in de tabel --}}
                                     <tr>
-                                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
-                                            {{ __('Datum laatste levering') }}
-                                        </th>
-                                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
-                                            {{ __('Aantal') }}
-                                        </th>
-                                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700">
-                                            {{ __('Datum eerstvolgende levering') }}
-                                        </th>
+                                        <td colspan="4" class="px-4 py-6 text-center text-gray-900">
+                                            {{ $geenVoorraadMelding }}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200 bg-white">
-                                    @forelse ($leveringen as $levering)
+                                @elseif ($leveringen->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                                            {{ __('Van dit product zijn nog geen leveringen bekend.') }}
+                                        </td>
+                                    </tr>
+                                @else
+                                    {{-- Scenario 1: leverdata, gesorteerd op Datum laatste levering oplopend --}}
+                                    @foreach ($leveringen as $levering)
                                         <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
+                                                {{ $product->Naam }}
+                                            </td>
                                             <td class="px-4 py-3 whitespace-nowrap text-gray-900">
                                                 {{ $levering->DatumLevering->format('d-m-Y') }}
                                             </td>
@@ -88,17 +82,11 @@
                                                 {{ $levering->DatumEerstVolgendeLevering?->format('d-m-Y') ?? __('-') }}
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="3" class="px-4 py-6 text-center text-gray-500">
-                                                {{ __('Van dit product zijn nog geen leveringen bekend.') }}
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="mt-6">
                         <a href="{{ route('magazijn.index') }}"

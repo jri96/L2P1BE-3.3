@@ -40,6 +40,12 @@ class LeveringInformatieTest extends TestCase
         $response->assertSee('Mobiel');
         $response->assertSee('06-28493827');
 
+        // Kolomkoppen van de tabel, zoals op het wireframe.
+        $response->assertSee('Naam Product');
+        $response->assertSee('Datum laatste levering');
+        $response->assertSee('Aantal');
+        $response->assertSee('Eerstvolgende levering');
+
         // Tabel met leverdata, gesorteerd op datum van de laatste levering oplopend.
         $response->assertSee('09-10-2024');
         $response->assertSee('18-10-2024');
@@ -70,6 +76,11 @@ class LeveringInformatieTest extends TestCase
         );
 
         $inhoud = $response->getContent();
+        $this->assertMatchesRegularExpression(
+            '/<td[^>]*>\s*Er is van dit product op dit moment geen voorraad aanwezig/',
+            $inhoud,
+            'De melding staat niet in de tabel.'
+        );
         $this->assertStringContainsString('}, 4000);', $inhoud, 'De redirect na 4 seconden ontbreekt.');
         $this->assertStringContainsString(route('magazijn.index'), $inhoud, 'De redirect verwijst niet naar het magazijnoverzicht.');
     }
